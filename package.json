@@ -28,6 +28,8 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "got": "^11.8.2",
+    "validator": "^13.6.0",
     "express": "^4.17.1",
     "jimp": "^0.16.1",
     "rimraf": "^3.0.2"
