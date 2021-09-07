@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import {filterImageFromURL, deleteLocalFiles, doesImageExist, ImageMeta} from './util/util';
+const validator = require('validator');
 
 (async () => {
 
@@ -29,7 +30,25 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   /**************************************************************************** */
 
-  //! END @TODO1
+app.get( "/filteredimage", async ( req, res ) => {
+  let imageUrl: string = req.query.image_url;
+
+  if (!imageUrl || !validator.isURL(imageUrl))
+    return res.status(400).send({ message: 'image_url is required or malformed' });
+
+  try {
+    let imageMeta: ImageMeta = await doesImageExist(imageUrl);
+    if(!imageMeta.found)
+      return res.status(404).send({ message: 'image_url Not Found' });
+
+    let imagePath: string = await filterImageFromURL(imageUrl);
+
+    res.setHeader('content-type', imageMeta.contentType);
+    res.sendFile(imagePath, () =>  deleteLocalFiles([imagePath]));
+  } catch(err) {
+    res.status(500).send(err);
+  }
+} );
   
   // Root Endpoint
   // Displays a simple message to the user

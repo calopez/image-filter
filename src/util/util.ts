@@ -1,5 +1,12 @@
 import fs from 'fs';
 import Jimp = require('jimp');
+import { Response as GotResponse } from 'got'
+import got from 'got';
+
+export interface ImageMeta {
+  contentType: string;
+  found: boolean;
+}
 
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
@@ -31,4 +38,18 @@ export async function deleteLocalFiles(files:Array<string>){
     for( let file of files) {
         fs.unlinkSync(file);
     }
+}
+
+// TODO: use the image response as parameter in filterImageFromURL Jimp.read
+// instead of the inputURL
+export async function doesImageExist(inputURL: string): Promise<ImageMeta>{
+  let result: ImageMeta = { found: true, contentType: '' };
+    try {
+      const response: GotResponse = await got(inputURL);
+      const contentType: string = response.headers['content-type'] || '';
+      if (contentType.match(/image/)) result.contentType = contentType;
+    } catch (error) {
+      result.found = false;
+    }
+  return result;
 }
