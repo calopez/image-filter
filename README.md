@@ -1,5 +1,5 @@
 # Running elastic beanstalk deployment URL
-[Filtering Microservice](http://udacity-c2-clopez-image-filter-dev.us-east-1.elasticbeansta
+[Filtering Microservice](http://udacity-c2-clopez-image-filter-dev.us-east-1.elasticbeansta)
 
 # Udagram Image Filtering Microservice
 
